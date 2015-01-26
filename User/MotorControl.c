@@ -315,9 +315,9 @@ void ProcessEncoder(void){
 			delta[0] = MotorSpeedData.new_position_uint + 32768 - MotorSpeedData.old_position_uint;	// 正转
 			delta[1] = MotorSpeedData.old_position_uint - MotorSpeedData.new_position_uint;			// 反转
 		}
-		if(delta[0] < 1092 && delta[0] >= 0){
+		if(delta[0] < 1638 && delta[0] >= 0){
 			MotorSpeedData.del_position_uint = delta[0];
-		}else if(delta[1] < 1092 && delta[1] >= 0){
+		}else if(delta[1] < 1638 && delta[1] >= 0){
 			MotorSpeedData.del_position_uint = -(delta[1]);
 		}else{
 		}
