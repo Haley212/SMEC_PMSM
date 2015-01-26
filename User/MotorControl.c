@@ -183,22 +183,37 @@ void ProcessMotorSpeedLoop(void){
 }
 
 unsigned int InvProtectionRoutine(void){	//软件保护，返回1表示有问题
-
+float t;
 #define INV_OVER_CURRENT	40
 #define MOTOR_OVERSPEED		110
 
 	if(InvRunningData.U_Current > INV_OVER_CURRENT || InvRunningData.U_Current < -INV_OVER_CURRENT){
-		InvRunningData.MotorUOCCounter ++;
+		t = -InvRunningData.V_Current - InvRunningData.W_Current;
+		if(t > INV_OVER_CURRENT || t < -INV_OVER_CURRENT){
+			InvRunningData.MotorUOCCounter ++;
+		}else{
+			InvRunningData.U_Current = t;
+		}
 	}else{
 		InvRunningData.MotorUOCCounter = 0;
 	}
 	if(InvRunningData.V_Current > INV_OVER_CURRENT || InvRunningData.V_Current < -INV_OVER_CURRENT){
-		InvRunningData.MotorVOCCounter ++;
+		t = -InvRunningData.U_Current - InvRunningData.W_Current;
+		if(t > INV_OVER_CURRENT || t < -INV_OVER_CURRENT){
+			InvRunningData.MotorVOCCounter ++;
+		}else{
+			InvRunningData.V_Current = t;
+		}
 	}else{
 		InvRunningData.MotorVOCCounter = 0;
 	}
 	if(InvRunningData.W_Current > INV_OVER_CURRENT || InvRunningData.W_Current < -INV_OVER_CURRENT){
-		InvRunningData.MotorWOCCounter ++;
+		t = -InvRunningData.U_Current - InvRunningData.V_Current;
+		if(t > INV_OVER_CURRENT || t < -INV_OVER_CURRENT){
+			InvRunningData.MotorWOCCounter ++;
+		}else{
+			InvRunningData.W_Current = t;
+		}
 	}else{
 		InvRunningData.MotorWOCCounter = 0;
 	}
