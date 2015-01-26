@@ -127,6 +127,15 @@ void ProcessRectifierControlInit(void){
 }
 
 void ProcessRectifierPREP(void){
+	GridVoltageDQ.sine_value = SOGIPLLData.theta_sin;
+	GridVoltageDQ.cosine_value = SOGIPLLData.theta_cos;
+	GridVoltageDQ.U = RectRunningData.U_Voltage;
+	GridVoltageDQ.V = RectRunningData.V_Voltage;
+	GridVoltageDQ.W = RectRunningData.W_Voltage;
+	ABC2DQ(&GridVoltageDQ);
+	RectRunningData.VoltageD = GridVoltageDQ.D;
+	RectRunningData.VoltageQ = GridVoltageDQ.Q;
+
 	DQ2ABC(&GridVoltageDQ);
 	SVMArguments[DC_VOLTAGE] = RectRunningData.DC_Voltage * 0.5f;
 	SVMArguments[VOLTAGE_SHIFT] = 0;
