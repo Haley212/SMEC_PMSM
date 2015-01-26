@@ -193,6 +193,7 @@ unsigned int InvProtectionRoutine(void){	//软件保护，返回1表示有问题
 			InvRunningData.MotorUOCCounter ++;
 		}else{
 			InvRunningData.U_Current = t;
+			InvRunningData.MotorUOCCounter = 0;
 		}
 	}else{
 		InvRunningData.MotorUOCCounter = 0;
@@ -203,6 +204,7 @@ unsigned int InvProtectionRoutine(void){	//软件保护，返回1表示有问题
 			InvRunningData.MotorVOCCounter ++;
 		}else{
 			InvRunningData.V_Current = t;
+			InvRunningData.MotorVOCCounter = 0;
 		}
 	}else{
 		InvRunningData.MotorVOCCounter = 0;
@@ -213,6 +215,7 @@ unsigned int InvProtectionRoutine(void){	//软件保护，返回1表示有问题
 			InvRunningData.MotorWOCCounter ++;
 		}else{
 			InvRunningData.W_Current = t;
+			InvRunningData.MotorWOCCounter = 0;
 		}
 	}else{
 		InvRunningData.MotorWOCCounter = 0;

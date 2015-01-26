@@ -246,6 +246,7 @@ unsigned int RectProtectionRoutine(unsigned int fpga_fault){
 			RectRunningData.RectUOCCounter ++;
 		}else{
 			RectRunningData.U_Current = t;
+			RectRunningData.RectUOCCounter = 0;
 		}
 	}else{
 		RectRunningData.RectUOCCounter = 0;
@@ -257,6 +258,7 @@ unsigned int RectProtectionRoutine(unsigned int fpga_fault){
 			RectRunningData.RectVOCCounter ++;
 		}else{
 			RectRunningData.V_Current = t;
+			RectRunningData.RectVOCCounter = 0;
 		}
 	}else{
 		RectRunningData.RectVOCCounter = 0;
@@ -268,6 +270,7 @@ unsigned int RectProtectionRoutine(unsigned int fpga_fault){
 			RectRunningData.RectWOCCounter ++;
 		}else{
 			RectRunningData.W_Current = t;
+			RectRunningData.RectWOCCounter = 0;
 		}
 	}else{
 		RectRunningData.RectWOCCounter = 0;
