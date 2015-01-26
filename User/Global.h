@@ -18,7 +18,7 @@
 #include "SOGI_PLL.h"
 #include "stdio.h"
 
-#define DSP_VERSION	3112
+#define DSP_VERSION	3113
 
 //	ÕûÁ÷²â×´Ì¬
 #define STATE_IDLE			0		//	¿ÕÏÐ×´Ì¬

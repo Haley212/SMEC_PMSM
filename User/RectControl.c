@@ -80,7 +80,7 @@ void GridPLLRoutine(void){
 //	RectRunningData.GridAngle = SOGIPLLData.theta;
 //	GridVoltageDQ.sine_value = sin(SOGIPLLData.theta);
 //	GridVoltageDQ.cosine_value = cos(SOGIPLLData.theta);
-
+/*
 	GridVoltageDQ.sine_value = SOGIPLLData.theta_sin;
 	GridVoltageDQ.cosine_value = SOGIPLLData.theta_cos;
 	GridVoltageDQ.U = RectRunningData.U_Voltage;
@@ -101,6 +101,7 @@ void GridPLLRoutine(void){
 
 	GridRectOutDQ.sine_value = SOGIPLLData.theta_sin;
 	GridRectOutDQ.cosine_value = SOGIPLLData.theta_cos;
+*/
 }
 
 void ProcessRectifierControlInit(void){
@@ -141,6 +142,26 @@ void ProcessRectifierPREP(void){
 }
 
 void ProcessRectifierControl(void){
+	GridVoltageDQ.sine_value = SOGIPLLData.theta_sin;
+	GridVoltageDQ.cosine_value = SOGIPLLData.theta_cos;
+	GridVoltageDQ.U = RectRunningData.U_Voltage;
+	GridVoltageDQ.V = RectRunningData.V_Voltage;
+	GridVoltageDQ.W = RectRunningData.W_Voltage;
+	ABC2DQ(&GridVoltageDQ);
+	RectRunningData.VoltageD = GridVoltageDQ.D;
+	RectRunningData.VoltageQ = GridVoltageDQ.Q;
+
+	GridCurrentDQ.sine_value = SOGIPLLData.theta_sin;
+	GridCurrentDQ.cosine_value = SOGIPLLData.theta_cos;
+	GridCurrentDQ.U = RectRunningData.U_Current;
+	GridCurrentDQ.V = RectRunningData.V_Current;
+	GridCurrentDQ.W = RectRunningData.W_Current;
+	ABC2DQ(&GridCurrentDQ);
+	RectRunningData.CurrentD = GridCurrentDQ.D;
+	RectRunningData.CurrentQ = GridCurrentDQ.Q;
+
+	GridRectOutDQ.sine_value = SOGIPLLData.theta_sin;
+	GridRectOutDQ.cosine_value = SOGIPLLData.theta_cos;
 
 	/*直流电压环*/
 	if(MachineState == STATE_ONGRID){					//正常工作时
@@ -201,6 +222,7 @@ void ProcessRectifierControl(void){
 }
 
 unsigned int RectProtectionRoutine(unsigned int fpga_fault){
+	float t;
 #define RECT_OVER_CURRENT 25.0f
 	//700V
 #define RECT_DC_HIGH	370.0f
@@ -210,19 +232,34 @@ unsigned int RectProtectionRoutine(unsigned int fpga_fault){
 #define RECT_DC_DELTA	60.0f
 
 	if(RectRunningData.U_Current > RECT_OVER_CURRENT || RectRunningData.U_Current < -RECT_OVER_CURRENT){
-		RectRunningData.RectUOCCounter ++;
+		t = - RectRunningData.V_Current - RectRunningData.W_Current;
+		if(t > RECT_OVER_CURRENT || t < -RECT_OVER_CURRENT){
+			RectRunningData.RectUOCCounter ++;
+		}else{
+			RectRunningData.U_Current = t;
+		}
 	}else{
 		RectRunningData.RectUOCCounter = 0;
 	}
 
 	if(RectRunningData.V_Current > RECT_OVER_CURRENT || RectRunningData.V_Current < -RECT_OVER_CURRENT){
-		RectRunningData.RectVOCCounter ++;
+		t = - RectRunningData.U_Current - RectRunningData.W_Current;
+		if(t > RECT_OVER_CURRENT || t < -RECT_OVER_CURRENT){
+			RectRunningData.RectVOCCounter ++;
+		}else{
+			RectRunningData.V_Current = t;
+		}
 	}else{
 		RectRunningData.RectVOCCounter = 0;
 	}
 
 	if(RectRunningData.W_Current > RECT_OVER_CURRENT || RectRunningData.W_Current < -RECT_OVER_CURRENT){
-		RectRunningData.RectWOCCounter ++;
+		t = - RectRunningData.U_Current - RectRunningData.V_Current;
+		if(t > RECT_OVER_CURRENT || t < -RECT_OVER_CURRENT){
+			RectRunningData.RectWOCCounter ++;
+		}else{
+			RectRunningData.W_Current = t;
+		}
 	}else{
 		RectRunningData.RectWOCCounter = 0;
 	}
@@ -240,18 +277,24 @@ unsigned int RectProtectionRoutine(unsigned int fpga_fault){
 		RectRunningData.RectErrMark.W_OVERCURRENT = RectRunningData.W_Current;
 	}
 
-	//下面是容错保护机制
+	//下面是直流电压保护
 	if(MachineState == STATE_ONGRID){				//直流电容充电完成
 		if(RectRunningData.DC_Voltage > RECT_DCSUM_HIGH || RectRunningData.DC_Voltage < RECT_DCSUM_LOW){
 			RectRunningData.RectDCSumErrCounter ++;
 			RectRunningData.DC_Voltage = RectRunningData.DC_Voltage_old;
 			RectRunningData.DC_Delta = RectRunningData.DC_Delta_old;
-		}else{RectRunningData.RectDCSumErrCounter = 0;RectRunningData.DC_Voltage_old = RectRunningData.DC_Voltage;}
+		}else{
+			RectRunningData.RectDCSumErrCounter = 0;
+			RectRunningData.DC_Voltage_old = RectRunningData.DC_Voltage;
+		}
 		if(RectRunningData.DC_Delta > RECT_DC_DELTA || RectRunningData.DC_Delta < -RECT_DC_DELTA){
 			RectRunningData.RectDCDelErrCounter ++;
 			RectRunningData.DC_Voltage = RectRunningData.DC_Voltage_old;
 			RectRunningData.DC_Delta = RectRunningData.DC_Delta_old;
-		}else{RectRunningData.RectDCDelErrCounter = 0;RectRunningData.DC_Delta_old = RectRunningData.DC_Delta;}
+		}else{
+			RectRunningData.RectDCDelErrCounter = 0;
+			RectRunningData.DC_Delta_old = RectRunningData.DC_Delta;
+		}
 	}else if(MachineState == STATE_DC_UNSTABLE){	//直流电容还在充电
 		if(RectRunningData.DC_Voltage > 730 || RectRunningData.DC_Voltage < 520){
 			RectRunningData.RectDCSumErrCounter ++;
@@ -265,11 +308,11 @@ unsigned int RectProtectionRoutine(unsigned int fpga_fault){
 		}else{RectRunningData.RectDCDelErrCounter = 0;RectRunningData.DC_Delta_old = RectRunningData.DC_Delta;}
 	}
 
-	if(RectRunningData.RectDCSumErrCounter > 2){
+	if(RectRunningData.RectDCSumErrCounter > 5){
 		RectRunningData.RectProtection.bit.SUM_DC_ERR = 1;
 		RectRunningData.RectErrMark.SUM_DC_ERR = RectRunningData.DC_Voltage;
 	}
-	if(RectRunningData.RectDCDelErrCounter > 2){
+	if(RectRunningData.RectDCDelErrCounter > 5){
 		RectRunningData.RectProtection.bit.DEL_DC_ERR = 1;
 		RectRunningData.RectErrMark.DEL_DC_ERR = RectRunningData.DC_Delta;
 	}
