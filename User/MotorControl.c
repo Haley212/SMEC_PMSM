@@ -22,10 +22,17 @@ sPIDParams MotorCurrentDPI;
 sPIDParams MotorCurrentQPI;
 sPIDParams MotorSpeedPI;
 
+#define SpeedArrayMax 4
+float SpeedArray[SpeedArrayMax];
+unsigned int SpeedArrayIndex;
+float SpeedAverage;
+
 void InvControlInit(void){
-	GivenSpeed = 140.0f;
+	GivenSpeed = 40.0f;
 	SpeedRef = 40.0f;
 	OpenLoopBoolean = 0;		//默认闭环
+
+	SpeedArrayIndex = 0;
 
 	InvRunningData.MotorAngle = 0.0f;
 	InvRunningData.CurrentDPI = 0;
@@ -170,8 +177,12 @@ void ProcessMotorSpeedLoop(void){
 //			MotorSpeedData.omega = MotorSpeedData.SpeedRpm_pr * 1.256637061f;	// 12 * 2pi / 60
 			MotorSpeedData.omega = 0.0f;
 		}*/
-		MotorSpeedPI.MeasuredValue = MotorSpeedData.SpeedRpm_fr;
-		MotorSpeedData.omega = MotorSpeedData.SpeedRpm_fr * 1.256637061f;	// 12 * 2pi / 60
+
+		MotorSpeedPI.MeasuredValue = SpeedAverage;
+		MotorSpeedData.omega = SpeedAverage * 1.256637061f;	// 12 * 2pi / 60
+
+//		MotorSpeedPI.MeasuredValue = MotorSpeedData.SpeedRpm_fr;
+//		MotorSpeedData.omega = MotorSpeedData.SpeedRpm_fr * 1.256637061f;	// 12 * 2pi / 60
 //		MotorSpeedData.omega = 0.0f;
 		InvRunningData.TorqueQ += IncPIControl(&MotorSpeedPI);
 		if(InvRunningData.TorqueQ > MAX_TORQUE_CURRENT){InvRunningData.TorqueQ = MAX_TORQUE_CURRENT;}
@@ -333,14 +344,19 @@ void ProcessEncoder(void){
 			delta[0] = MotorSpeedData.new_position_uint + 32768 - MotorSpeedData.old_position_uint;	// 正转
 			delta[1] = MotorSpeedData.old_position_uint - MotorSpeedData.new_position_uint;			// 反转
 		}
-		if(delta[0] < 1092 && delta[0] >= 0){
+		if(delta[0] < 1638 && delta[0] >= 0){
 			MotorSpeedData.del_position_uint = delta[0];
-		}else if(delta[1] < 1092 && delta[1] >= 0){
+		}else if(delta[1] < 1638 && delta[1] >= 0){
 			MotorSpeedData.del_position_uint = -(delta[1]);
 		}else{
 		}
 		MotorSpeedData.old_position_uint = MotorSpeedData.new_position_uint;
 		MotorSpeedData.SpeedRpm_fr = ((float)MotorSpeedData.del_position_uint) * 0.183105468f;
+
+		SpeedArray[SpeedArrayIndex] = MotorSpeedData.SpeedRpm_fr;
+		SpeedArrayIndex ++;
+		SpeedArrayIndex = SpeedArrayIndex % SpeedArrayMax;
+		SpeedAverage = (SpeedArray[0] + SpeedArray[1] + SpeedArray[2] + SpeedArray[3]) * 0.25f;
 
 		/*
 		MotorSpeedData.DirectionQeq = EQep1Regs.QEPSTS.bit.QDF;
@@ -383,7 +399,7 @@ void ProcessEncoder(void){
 		MotorSpeedData.speed_sync_flag = 1;		// 10ms到了，速度环PI在下一个周期10k周期进行计算
 		EQep1Regs.QCLR.bit.UTO = 1;				// clear
 	}
-
+/*
 	// Low Speed Calculation using QEP capture counter	测试低速，23rpm
 	if(EQep1Regs.QEPSTS.bit.UPEVNT == 1){
 		if(EQep1Regs.QEPSTS.bit.COEF == 0){		// No capture overflow
@@ -402,6 +418,7 @@ void ProcessEncoder(void){
 	if(EQep1Regs.QEPSTS.bit.CDEF == 1){
 		EQep1Regs.QEPSTS.bit.CDEF = 1;
 	}
+*/
 	/*
 	GpioCtrlRegs.GPBMUX2.bit.GPIO52 = 0;	//GPIO52 -> F0
 	GpioCtrlRegs.GPBDIR.bit.GPIO52 = 0;		//Input
