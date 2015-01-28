@@ -23,8 +23,8 @@
 #define SOGI_2PI				6.283185307f
 #define SOGI_HALF_PI			1.570796327f
 
-#define SOGI_OMEGA_MAX			326.72f
-#define SOGI_OMEGA_MIN			188.59f
+#define SOGI_OMEGA_MAX			327.0f
+#define SOGI_OMEGA_MIN			300.0f
 
 
 typedef struct{
