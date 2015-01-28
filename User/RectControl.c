@@ -80,7 +80,7 @@ void GridPLLRoutine(void){
 //	RectRunningData.GridAngle = SOGIPLLData.theta;
 //	GridVoltageDQ.sine_value = sin(SOGIPLLData.theta);
 //	GridVoltageDQ.cosine_value = cos(SOGIPLLData.theta);
-/*
+
 	GridVoltageDQ.sine_value = SOGIPLLData.theta_sin;
 	GridVoltageDQ.cosine_value = SOGIPLLData.theta_cos;
 	GridVoltageDQ.U = RectRunningData.U_Voltage;
@@ -89,7 +89,7 @@ void GridPLLRoutine(void){
 	ABC2DQ(&GridVoltageDQ);
 	RectRunningData.VoltageD = GridVoltageDQ.D;
 	RectRunningData.VoltageQ = GridVoltageDQ.Q;
-
+/*
 	GridCurrentDQ.sine_value = SOGIPLLData.theta_sin;
 	GridCurrentDQ.cosine_value = SOGIPLLData.theta_cos;
 	GridCurrentDQ.U = RectRunningData.U_Current;
@@ -127,14 +127,6 @@ void ProcessRectifierControlInit(void){
 }
 
 void ProcessRectifierPREP(void){
-	GridVoltageDQ.sine_value = SOGIPLLData.theta_sin;
-	GridVoltageDQ.cosine_value = SOGIPLLData.theta_cos;
-	GridVoltageDQ.U = RectRunningData.U_Voltage;
-	GridVoltageDQ.V = RectRunningData.V_Voltage;
-	GridVoltageDQ.W = RectRunningData.W_Voltage;
-	ABC2DQ(&GridVoltageDQ);
-	RectRunningData.VoltageD = GridVoltageDQ.D;
-	RectRunningData.VoltageQ = GridVoltageDQ.Q;
 
 	DQ2ABC(&GridVoltageDQ);
 	SVMArguments[DC_VOLTAGE] = RectRunningData.DC_Voltage * 0.5f;
@@ -151,6 +143,7 @@ void ProcessRectifierPREP(void){
 }
 
 void ProcessRectifierControl(void){
+/*
 	GridVoltageDQ.sine_value = SOGIPLLData.theta_sin;
 	GridVoltageDQ.cosine_value = SOGIPLLData.theta_cos;
 	GridVoltageDQ.U = RectRunningData.U_Voltage;
@@ -159,7 +152,7 @@ void ProcessRectifierControl(void){
 	ABC2DQ(&GridVoltageDQ);
 	RectRunningData.VoltageD = GridVoltageDQ.D;
 	RectRunningData.VoltageQ = GridVoltageDQ.Q;
-
+*/
 	GridCurrentDQ.sine_value = SOGIPLLData.theta_sin;
 	GridCurrentDQ.cosine_value = SOGIPLLData.theta_cos;
 	GridCurrentDQ.U = RectRunningData.U_Current;
