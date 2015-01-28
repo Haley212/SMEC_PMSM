@@ -23,7 +23,7 @@ SOGIPLLStruct SOGIPLLData;
 
 void SOGI_PLL_Init(SOGIPLLStruct *pSOGIPLL){
 	IncPIDControlInit(&(pSOGIPLL->QPI));
-	pSOGIPLL->QPI.ProportionalGain = 1.0f;
+	pSOGIPLL->QPI.ProportionalGain = 0.1f;
 	pSOGIPLL->QPI.IntergralGain = 0.05f;
 	pSOGIPLL->QPI.DesiredValue = 0.0f;
 	pSOGIPLL->theta = 0.0f;
