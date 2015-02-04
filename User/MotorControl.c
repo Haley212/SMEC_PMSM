@@ -28,7 +28,7 @@ unsigned int SpeedArrayIndex;
 float SpeedAverage;
 
 void InvControlInit(void){
-	GivenSpeed = 40.0f;
+	GivenSpeed = 140.0f;
 	SpeedRef = 40.0f;
 	OpenLoopBoolean = 0;		//Ä¬ÈÏ±Õ»·
 
