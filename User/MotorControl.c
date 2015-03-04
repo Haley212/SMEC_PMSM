@@ -28,8 +28,8 @@ unsigned int SpeedArrayIndex;
 float SpeedAverage;
 
 void InvControlInit(void){
-	GivenSpeed = 140.0f;
-	SpeedRef = 40.0f;
+	GivenSpeed = 240.0f;
+	SpeedRef = 10.0f;
 	OpenLoopBoolean = 0;		//Ä¬ÈÏ±Õ»·
 
 	SpeedArrayIndex = 0;
@@ -152,7 +152,7 @@ void ProcessInverterControl(void){
 
 void ProcessMotorSpeedLoop(void){
 	float err;
-#define ERR_SLOPE 1.0f
+#define ERR_SLOPE 0.5f
 	if(MotorSpeedData.speed_sync_flag == 1){
 		err = GivenSpeed - SpeedRef;
 		if(err > ERR_SLOPE){
