@@ -82,7 +82,8 @@ char *commands[] = {
 		">",			//add speed				20
 		"o",			//return encoder		21
 		"k",			//open loop				22
-		"<"				//sub speed				23
+		"<",			//sub speed				23
+		"&"				//all on( ! and $ included )
 };
 
 MenuStruct Menu;
@@ -111,6 +112,7 @@ void AddSpeed(void);
 void Encoder(void);
 void OpenLoopCMD(void);
 void SubSpeed(void);
+void GridAndMotorCMD(void);
 void cmd_forbidden(void);			//ÃüÁî±»½ûÖ¹
 
 void MainMenu(void){
@@ -143,6 +145,7 @@ void MainMenu(void){
 	Menu.CMD[21].fp = Encoder;
 	Menu.CMD[22].fp = OpenLoopCMD;
 	Menu.CMD[23].fp = SubSpeed;
+	Menu.CMD[24].fp = GridAndMotorCMD;
 
 	while(1){
 		while(SCICmdBufferIndex){
@@ -452,6 +455,14 @@ void OpenLoopCMD(void){
 		sPrintf("\r\nChange to Closed Loop.");
 	}
 */
+}
+
+void GridAndMotorCMD(void){
+	sPrintf("\r\nGrid And Motor will start NOW!");
+	DelayMs(3000);
+	OnGridCMD();
+	DelayMs(3000);
+	MotorONCMD();
 }
 
 void cmd_forbidden(void){
