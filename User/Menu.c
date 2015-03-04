@@ -79,12 +79,10 @@ char *commands[] = {
 		"$",			//Motor On				17
 		"x",			//Motor Off				18
 		"p",			//power calcu			19
-		">",			//add power				20
+		">",			//add speed				20
 		"o",			//return encoder		21
 		"k",			//open loop				22
-		"<",			//sub speed				23
-		".",			//add speedref			24
-		","				//sub speedref			25
+		"<"				//sub speed				23
 };
 
 MenuStruct Menu;
@@ -113,8 +111,6 @@ void AddSpeed(void);
 void Encoder(void);
 void OpenLoopCMD(void);
 void SubSpeed(void);
-void AddSpeedRef(void);
-void SubSpeedRef(void);
 void cmd_forbidden(void);			//ÃüÁî±»½ûÖ¹
 
 void MainMenu(void){
@@ -147,8 +143,6 @@ void MainMenu(void){
 	Menu.CMD[21].fp = Encoder;
 	Menu.CMD[22].fp = OpenLoopCMD;
 	Menu.CMD[23].fp = SubSpeed;
-	Menu.CMD[24].fp = AddSpeedRef;
-	Menu.CMD[25].fp = SubSpeedRef;
 
 	while(1){
 		while(SCICmdBufferIndex){
@@ -325,6 +319,13 @@ void charging_relay_off(void){
 void OnGridCMD(void){
 	unsigned int i = 0;
 	sPrintf("\r\nWaiting...");
+	i = 0;
+	while(i < 100){	// Check PLL
+		if(RectRunningData.GridFreq > 47.0f && RectRunningData.GridFreq < 53.0f){i ++;}
+		else{i = 0;}
+		DelayMs(1);
+	}
+
 	DelayMs(1000);
 	sPrintf("\r\nResist Charging...");
 	if(MachineState == STATE_ERR){return;}
@@ -430,16 +431,6 @@ void SubSpeed(void){
 	sPrintf("\r\nGiven Spd: %drpm",(int)GivenSpeed);
 }
 
-void AddSpeedRef(void){
-	SpeedRef += 10.0f;
-	sPrintf("\r\nInit Spd: %drpm",(int)SpeedRef);
-}
-
-void SubSpeedRef(void){
-	SpeedRef -= 10.0f;
-	sPrintf("\r\nInit Spd: %drpm",(int)SpeedRef);
-}
-
 void Encoder(void){
 	sPrintf("\r\nRPM: %d, %d",(int)(MotorSpeedData.SpeedRpm_fr * 10),(int)(MotorSpeedData.SpeedRpm_pr * 10));
 	sPrintf("\r\nC: %d",(unsigned int)EQep1Regs.QPOSCNT);
@@ -452,6 +443,7 @@ void Encoder(void){
 }
 
 void OpenLoopCMD(void){
+/*
 	if(OpenLoopBoolean){OpenLoopBoolean = 0;}
 	else if(OpenLoopBoolean == 0){OpenLoopBoolean = 1;}
 	if(OpenLoopBoolean == 1){
@@ -459,6 +451,7 @@ void OpenLoopCMD(void){
 	}else if(OpenLoopBoolean == 0){
 		sPrintf("\r\nChange to Closed Loop.");
 	}
+*/
 }
 
 void cmd_forbidden(void){

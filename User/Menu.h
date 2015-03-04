@@ -13,7 +13,7 @@ extern volatile unsigned char MotorState;
 extern unsigned char SCICmdBuffer[8];
 extern unsigned char SCICmdBufferIndex;
 
-#define MAX_CMD 26
+#define MAX_CMD 24
 
 typedef struct MenuCmd{
 	char *cmd;

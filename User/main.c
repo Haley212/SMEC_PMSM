@@ -94,6 +94,7 @@ void main(void){
 	EncoderInit(1);
 	MachineState = STATE_IDLE;
 	MotorState = MOTOR_IDLE;
+	GivenSpeed = 240.0f;
 
 	EINT;   // Enable Global interrupt INTM
 	ERTM;   // Enable Global realtime interrupt DBGM
