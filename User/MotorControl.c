@@ -137,7 +137,13 @@ void ProcessInverterControl(void){
 
 	SVMArguments[DC_VOLTAGE] = InvRunningData.DC_Voltage * 0.5f;
 	SVMArguments[VOLTAGE_SHIFT] = 0;
+#ifdef	NVC_ENABLE
+	SVMArguments[VOLTAGE_SHIFT] = -RectRunningData.DC_Delta * 0.1f;
+#endif
 
+	SVMArguments[CURRENT_A] = InvRunningData.U_Current;
+	SVMArguments[CURRENT_B] = InvRunningData.V_Current;
+	SVMArguments[CURRENT_C] = InvRunningData.W_Current;
 //	SVMArguments[VOLTAGE_OUT] = 310.0f;
 //	SVMArguments[VOLTAGE_A] =  SVMArguments[VOLTAGE_OUT] * cos(InvRunningData.MotorAngle);
 //	SVMArguments[VOLTAGE_B] =  SVMArguments[VOLTAGE_OUT] * cos(InvRunningData.MotorAngle + 4.188790205f);

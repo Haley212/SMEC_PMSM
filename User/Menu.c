@@ -381,6 +381,7 @@ void OffGridCMD(void){
 void MotorONCMD(void){
 	InvControlInit();
 	EncoderInit(0);
+	DelayMs(20);
 	if(MachineState != STATE_ONGRID){sPrintf("\r\nRect State Error.");return;}
 	if(MotorState == MOTOR_ERR){sPrintf("\r\nMotor Error.");return;}
 	MotorState = MOTOR_PREP;
