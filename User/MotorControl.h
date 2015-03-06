@@ -67,8 +67,8 @@ struct InvRunningDataStruct{
 	float CurrentQ;					//Q轴电流
 
 	float TorqueQ;					//Q轴指令电流
-#define MAX_TORQUE_CURRENT		5
-#define MIN_TORQUE_CURRENT		-5
+#define MAX_TORQUE_CURRENT		45
+#define MIN_TORQUE_CURRENT		-45
 	float CurrentDPI;				//PI后电流直流
 #define	MAX_MOTOR_CURRENTDPI	200
 #define MIN_MOTOR_CURRENTDPI	-200

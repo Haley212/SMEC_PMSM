@@ -157,7 +157,7 @@ void ProcessInverterControl(void){
 
 void ProcessMotorSpeedLoop(void){
 	float err;
-#define ERR_SLOPE 0.5f
+#define ERR_SLOPE 1.0f
 	if(MotorSpeedData.speed_sync_flag == 1){
 		err = GivenSpeed - SpeedRef;
 		if(err > ERR_SLOPE){
@@ -349,9 +349,9 @@ void ProcessEncoder(void){
 			delta[0] = MotorSpeedData.new_position_uint + 32768 - MotorSpeedData.old_position_uint;	// 正转
 			delta[1] = MotorSpeedData.old_position_uint - MotorSpeedData.new_position_uint;			// 反转
 		}
-		if(delta[0] < 1638 && delta[0] >= 0){
+		if(delta[0] < 2184 && delta[0] >= 0){			// 1638 -> 300rpm, 2184 -> 400rpm
 			MotorSpeedData.del_position_uint = delta[0];
-		}else if(delta[1] < 1638 && delta[1] >= 0){
+		}else if(delta[1] < 2184 && delta[1] >= 0){
 			MotorSpeedData.del_position_uint = -(delta[1]);
 		}else{
 		}

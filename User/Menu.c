@@ -460,9 +460,9 @@ void OpenLoopCMD(void){
 
 void GridAndMotorCMD(void){
 	sPrintf("\r\nGrid And Motor will start NOW!");
-	DelayMs(3000);
+	DelayMs(1000);
 	OnGridCMD();
-	DelayMs(3000);
+	DelayMs(1000);
 	MotorONCMD();
 }
 
