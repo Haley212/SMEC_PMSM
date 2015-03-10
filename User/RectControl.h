@@ -82,8 +82,8 @@ struct RectRunningDataStruct{
 	float CurrentD;					//D轴电流
 	float CurrentQ;					//Q轴电流
 	float DesiredDCurrent;			//D轴直流电流，Q轴为0
-#define MAX_DESIRED_D_CURRENT	30
-#define MIN_DESIRED_D_CURRENT	-30
+#define MAX_DESIRED_D_CURRENT	40
+#define MIN_DESIRED_D_CURRENT	-40
 #define MAX_CHARGING_D_CURRENT	5
 #define MIN_CHARGING_D_CURRENT	-5
 	float CurrentDPI;				//PI后电流直流

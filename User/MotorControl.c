@@ -316,13 +316,13 @@ void EncoderInit(int init_rotor_position){
 }
 
 void ProcessEncoder(void){
-	unsigned int pos;
+	unsigned long pos;
 	unsigned int tmr;
 	signed long delta[2];
 	MotorSpeedData.DirectionQeq = EQep1Regs.QEPSTS.bit.QDF;
 
 	/*Motor RAW Position*/
-	pos = (unsigned int)EQep1Regs.QPOSCNT;
+	pos = (unsigned long)EQep1Regs.QPOSCNT;
 	MotorSpeedData.theta_raw = (float)pos;
 
 	/*mech*/
@@ -339,7 +339,7 @@ void ProcessEncoder(void){
 
 	// High Speed Calculation using QEP Position counter
 	if(EQep1Regs.QFLG.bit.UTO == 1){		// unit timer 100hz
-		pos = (unsigned int)EQep1Regs.QPOSLAT;
+		pos = (unsigned long)EQep1Regs.QPOSLAT;
 		MotorSpeedData.new_position_uint = (signed long)pos;
 
 		if(MotorSpeedData.new_position_uint > MotorSpeedData.old_position_uint){

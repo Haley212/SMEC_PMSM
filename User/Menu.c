@@ -79,11 +79,13 @@ char *commands[] = {
 		"$",			//Motor On				17
 		"x",			//Motor Off				18
 		"p",			//power calcu			19
-		">",			//add speed				20
+		".",			//add speed				20
 		"o",			//return encoder		21
 		"k",			//open loop				22
-		"<",			//sub speed				23
-		"&"				//all on( ! and $ included )
+		",",			//sub speed				23
+		"&",			//all on( ! and $ included )
+		"/",			//sub speed 1rpm
+		"("				//·´×ªÃüÁî
 };
 
 MenuStruct Menu;
@@ -113,6 +115,8 @@ void Encoder(void);
 void OpenLoopCMD(void);
 void SubSpeed(void);
 void GridAndMotorCMD(void);
+void SubSpeed1RPM(void);
+void MotorReverse(void);
 void cmd_forbidden(void);			//ÃüÁî±»½ûÖ¹
 
 void MainMenu(void){
@@ -146,6 +150,8 @@ void MainMenu(void){
 	Menu.CMD[22].fp = OpenLoopCMD;
 	Menu.CMD[23].fp = SubSpeed;
 	Menu.CMD[24].fp = GridAndMotorCMD;
+	Menu.CMD[25].fp = SubSpeed1RPM;
+	Menu.CMD[26].fp = MotorReverse;
 
 	while(1){
 		while(SCICmdBufferIndex){
@@ -464,6 +470,23 @@ void GridAndMotorCMD(void){
 	OnGridCMD();
 	DelayMs(1000);
 	MotorONCMD();
+}
+
+void SubSpeed1RPM(void){
+	GivenSpeed -= 1.0f;
+	sPrintf("\r\nGiven Spd: %drpm",(int)GivenSpeed);
+}
+
+void MotorReverse(void){
+	if(GivenSpeed == 240.f){
+		sPrintf("\r\nSpeed Reverse to -240rpm.");
+		GivenSpeed == -240.0f;
+	}else if(GivenSpeed == -240.0f){
+		sPrintf("\r\nSpeed Reverse to +240rpm.");
+		GivenSpeed == 240.0f;
+	}else{
+		sPrintf("\r\nPlease let your GivenSpeed to +- 240rpm.");
+	}
 }
 
 void cmd_forbidden(void){
