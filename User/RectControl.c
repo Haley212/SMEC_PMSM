@@ -225,7 +225,7 @@ void ProcessRectifierControl(void){
 
 unsigned int RectProtectionRoutine(unsigned int fpga_fault){
 	float t;
-#define RECT_OVER_CURRENT 25.0f
+#define RECT_OVER_CURRENT 38.0f
 	//700V
 #define RECT_DC_HIGH	370.0f
 #define RECT_DC_LOW		330.0f

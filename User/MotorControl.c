@@ -200,7 +200,7 @@ void ProcessMotorSpeedLoop(void){
 
 unsigned int InvProtectionRoutine(void){	//软件保护，返回1表示有问题
 	float t;
-#define INV_OVER_CURRENT	40
+#define INV_OVER_CURRENT	50
 #define MOTOR_OVERSPEED		110
 
 	if(InvRunningData.U_Current > INV_OVER_CURRENT || InvRunningData.U_Current < -INV_OVER_CURRENT){
