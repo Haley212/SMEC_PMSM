@@ -157,7 +157,7 @@ void ProcessInverterControl(void){
 
 void ProcessMotorSpeedLoop(void){
 	float err;
-#define ERR_SLOPE 1.0f
+#define ERR_SLOPE 0.5f
 	if(MotorSpeedData.speed_sync_flag == 1){
 		err = GivenSpeed - SpeedRef;
 		if(err > ERR_SLOPE){
@@ -200,7 +200,7 @@ void ProcessMotorSpeedLoop(void){
 
 unsigned int InvProtectionRoutine(void){	//软件保护，返回1表示有问题
 	float t;
-#define INV_OVER_CURRENT	50
+#define INV_OVER_CURRENT	70
 #define MOTOR_OVERSPEED		110
 
 	if(InvRunningData.U_Current > INV_OVER_CURRENT || InvRunningData.U_Current < -INV_OVER_CURRENT){
@@ -237,7 +237,7 @@ unsigned int InvProtectionRoutine(void){	//软件保护，返回1表示有问题
 		InvRunningData.MotorWOCCounter = 0;
 	}
 
-	if(InvRunningData.MotorUOCCounter > 2){
+	if(InvRunningData.MotorUOCCounter > 5){
 		InvRunningData.InvProtection.bit.U_OVERCURRENT = 1;
 		InvRunningData.InvErrMark.U_OVERCURRENT = InvRunningData.U_Current;
 		InvRunningData.InvErrMark.OVER_SPEED = MotorSpeedData.SpeedRpm_fr;
@@ -246,7 +246,7 @@ unsigned int InvProtectionRoutine(void){	//软件保护，返回1表示有问题
 		InvRunningData.InvErrMark.U_Q = MotorVOutDQ.Q;
 		return 1;
 	}
-	if(InvRunningData.MotorVOCCounter > 2){
+	if(InvRunningData.MotorVOCCounter > 5){
 		InvRunningData.InvProtection.bit.V_OVERCURRENT = 1;
 		InvRunningData.InvErrMark.V_OVERCURRENT = InvRunningData.V_Current;
 		InvRunningData.InvErrMark.OVER_SPEED = MotorSpeedData.SpeedRpm_fr;
@@ -255,7 +255,7 @@ unsigned int InvProtectionRoutine(void){	//软件保护，返回1表示有问题
 		InvRunningData.InvErrMark.U_Q = MotorVOutDQ.Q;
 		return 1;
 	}
-	if(InvRunningData.MotorWOCCounter > 2){
+	if(InvRunningData.MotorWOCCounter > 5){
 		InvRunningData.InvProtection.bit.W_OVERCURRENT = 1;
 		InvRunningData.InvErrMark.W_OVERCURRENT = InvRunningData.W_Current;
 		InvRunningData.InvErrMark.OVER_SPEED = MotorSpeedData.SpeedRpm_fr;
@@ -349,9 +349,9 @@ void ProcessEncoder(void){
 			delta[0] = MotorSpeedData.new_position_uint + 32768 - MotorSpeedData.old_position_uint;	// 正转
 			delta[1] = MotorSpeedData.old_position_uint - MotorSpeedData.new_position_uint;			// 反转
 		}
-		if(delta[0] < 2184 && delta[0] >= 0){			// 1638 -> 300rpm, 2184 -> 400rpm
+		if(delta[0] < 1638 && delta[0] >= 0){			// 1638 -> 300rpm, 2184 -> 400rpm
 			MotorSpeedData.del_position_uint = delta[0];
-		}else if(delta[1] < 2184 && delta[1] >= 0){
+		}else if(delta[1] < 1638 && delta[1] >= 0){
 			MotorSpeedData.del_position_uint = -(delta[1]);
 		}else{
 		}

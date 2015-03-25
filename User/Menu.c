@@ -473,7 +473,7 @@ void GridAndMotorCMD(void){
 }
 
 void SubSpeed1RPM(void){
-	GivenSpeed -= 1.0f;
+	GivenSpeed += 1.0f;
 	sPrintf("\r\nGiven Spd: %drpm",(int)GivenSpeed);
 }
 
