@@ -22,7 +22,7 @@ sPIDParams MotorCurrentDPI;
 sPIDParams MotorCurrentQPI;
 sPIDParams MotorSpeedPI;
 
-#define SpeedArrayMax 4
+#define SpeedArrayMax 2
 float SpeedArray[SpeedArrayMax];
 unsigned int SpeedArrayIndex;
 float SpeedAverage;
@@ -361,7 +361,7 @@ void ProcessEncoder(void){
 		SpeedArray[SpeedArrayIndex] = MotorSpeedData.SpeedRpm_fr;
 		SpeedArrayIndex ++;
 		SpeedArrayIndex = SpeedArrayIndex % SpeedArrayMax;
-		SpeedAverage = (SpeedArray[0] + SpeedArray[1] + SpeedArray[2] + SpeedArray[3]) * 0.25f;
+		SpeedAverage = (SpeedArray[0] + SpeedArray[1] + SpeedArray[2] + SpeedArray[3]) * 0.5f;
 
 		/*
 		MotorSpeedData.DirectionQeq = EQep1Regs.QEPSTS.bit.QDF;

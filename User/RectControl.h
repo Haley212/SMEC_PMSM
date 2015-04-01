@@ -87,11 +87,11 @@ struct RectRunningDataStruct{
 #define MAX_CHARGING_D_CURRENT	5
 #define MIN_CHARGING_D_CURRENT	-5
 	float CurrentDPI;				//PI后电流直流
-#define	MAX_CURRENTDPI	30
-#define MIN_CURRENTDPI	-30
+#define	MAX_CURRENTDPI	100
+#define MIN_CURRENTDPI	-100
 	float CurrentQPI;				//PI后电流直流
-#define MAX_CURRENTQPI	30
-#define MIN_CURRENTQPI	-30
+#define MAX_CURRENTQPI	100
+#define MIN_CURRENTQPI	-100
 	float ReactorCompensate;
 
 	union RectProtectionStruct RectProtection;
