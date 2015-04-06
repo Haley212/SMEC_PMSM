@@ -361,7 +361,7 @@ void ProcessEncoder(void){
 		SpeedArray[SpeedArrayIndex] = MotorSpeedData.SpeedRpm_fr;
 		SpeedArrayIndex ++;
 		SpeedArrayIndex = SpeedArrayIndex % SpeedArrayMax;
-		SpeedAverage = (SpeedArray[0] + SpeedArray[1] + SpeedArray[2] + SpeedArray[3]) * 0.5f;
+		SpeedAverage = (SpeedArray[0] + SpeedArray[1]) * 0.5f;
 
 		/*
 		MotorSpeedData.DirectionQeq = EQep1Regs.QEPSTS.bit.QDF;
